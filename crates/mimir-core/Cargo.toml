@@ -1,0 +1,6 @@
+[package]
+name = "mimir-core"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
