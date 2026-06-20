@@ -1,0 +1,11 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/mimir-core",
+    "crates/mimir-client",
+    "crates/mimir-common",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
