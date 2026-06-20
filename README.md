@@ -1,3 +1,5 @@
+
+```
 mimir/
 ├── Cargo.toml                  # workspace root
 ├── crates/
@@ -43,3 +45,4 @@ mimir/
 │
 ├── docs/
 └── README.md
+```
