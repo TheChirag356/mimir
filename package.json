@@ -1,0 +1,5 @@
+{
+  "name": "mimir",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"]
+}

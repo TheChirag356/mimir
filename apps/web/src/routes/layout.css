@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+@import '@mimir/ui/styles';
+@source '../../../packages/ui/src/**/*.svelte';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';

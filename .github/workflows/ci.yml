@@ -1,0 +1,77 @@
+name: CI & Validation
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  CARGO_TERM_COLOR: always
+  # Ensure sqlx doesn't look for a live DB during cargo check if you use offline mode
+  SQLX_OFFLINE: true
+
+jobs:
+  # --- RUST CHECK & TEST ---
+  rust-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+
+      - name: Check Formatting
+        run: cargo fmt --all -- --check
+
+      - name: Clippy Lints
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Run Workspace Tests
+        # Runs unit and integration tests across core, client, and common
+        run: cargo test --workspace
+
+  # --- FRONTEND / TAURI VALIDATION ---
+  tauri-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-level: 20
+          # Adjust if using pnpm/yarn
+          cache: "npm"
+          cache-dependency-path: apps/tauri/package-lock.json
+
+      - name: Install Frontend Deps
+        run: |
+          cd apps/tauri
+          npm ci
+
+      - name: Frontend Lints & Tests
+        run: |
+          cd apps/tauri
+          npm run lint
+          # npm run test:unit (if applicable)
+
+  # --- MOBILE BINDINGS CHECK ---
+  # Ensures UniFFI bindings can still generate cleanly without breaking Swift/Kotlin
+  bindings-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust & Targets
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Verify Bindings Script Runs
+        run: |
+          chmod +x scripts/gen-bindings.sh
+          ./scripts/gen-bindings.sh

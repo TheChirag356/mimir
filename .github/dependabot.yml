@@ -1,0 +1,31 @@
+version: 2
+updates:
+  # 1. RUST WORKSPACE & TOOLCHAIN DEPENDENCIES
+  - package-ecosystem: "cargo"
+    # Scans the repository root (mimir/Cargo.toml and its workspace member crates)
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Keep pull requests grouped together to minimize CI runs
+    groups:
+      rust-dependencies:
+        patterns:
+          - "*"
+
+  # 2. FRONTEND / TAURI DEPENDENCIES
+  - package-ecosystem: "npm"
+    # Points exactly to where your package.json lives
+    directory: "/apps/tauri"
+    schedule:
+      interval: "weekly"
+    groups:
+      frontend-dependencies:
+        patterns:
+          - "*"
+
+  # 3. GITHUB ACTIONS WORKFLOW DEPENDENCIES
+  - package-ecosystem: "github-actions"
+    # Monitors actions/checkout, dtolnay/rust-toolchain, etc. in .github/workflows/
+    directory: "/"
+    schedule:
+      interval: "weekly"

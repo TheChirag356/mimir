@@ -40,6 +40,7 @@ mimir/
 │       ├── app/
 │       └── generated/          # uniffi-generated Kotlin bindings
 │
+├── packages/ui
 ├── scripts/
 │   └── gen-bindings.sh         # runs uniffi-bindgen for swift/kotlin targets
 │
