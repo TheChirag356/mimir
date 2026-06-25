@@ -1,16 +1,5 @@
 <script lang="ts">
-	import {
-		ShieldCheck,
-		Users,
-		RefreshCw,
-		Radio,
-		HardDrive,
-		Smartphone,
-		Monitor,
-		ChevronRight,
-		Copy,
-		Check
-	} from '@lucide/svelte';
+	import { ChevronRight, Monitor, Smartphone, Copy, Check } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
 
@@ -24,205 +13,194 @@
 	}
 </script>
 
-<div class="relative min-h-screen bg-background text-foreground selection:bg-primary/20">
-	<section
-		class="relative flex flex-col items-center justify-center px-6 pt-24 pb-20 text-center sm:pt-32 sm:pb-28 lg:px-8"
-	>
-		<div
-			class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-100/70 via-background to-background dark:from-zinc-900/30"
-		></div>
-
-		<div class="mx-auto max-w-4xl">
+<div class="bg-background">
+	<section class="mx-auto max-w-6xl px-6 pt-32 pb-24">
+		<div class="mx-auto max-w-4xl text-center">
 			<Badge
 				variant="secondary"
 				class="mb-6 rounded-full px-3 py-1 text-[12px] font-medium tracking-wide"
 			>
 				Open Source & Self-Hosted
 			</Badge>
-			<h1 class="text-5xl font-bold tracking-tight text-foreground sm:text-7xl lg:text-8xl">
-				Your audiobooks.<br />On your terms.
+
+			<h1 class="text-5xl font-semibold tracking-[-0.06em] text-balance sm:text-7xl lg:text-8xl">
+				Your audiobook library,
+				<br />
+				organized.
 			</h1>
-			<p class="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-				A fully featured, self-hosted streaming server designed specifically for audiobooks and
-				podcasts. Manage your library, track progress, and stream seamlessly across any device.
+
+			<p class="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+				Host, stream, and manage your audiobooks and podcasts from your own server. Continue
+				listening across devices, organize massive libraries, and keep complete ownership of your
+				collection.
 			</p>
 
-			<div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-				<Button href="/docs" size="lg" class="rounded-full px-8 text-[15px] font-medium">
-					Get Started
-				</Button>
+			<div class="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+				<Button size="lg" class="h-11 rounded-full px-6">Get Started</Button>
+
 				<Button
 					href="https://demo.audiobookshelf.org"
 					variant="outline"
 					size="lg"
-					class="rounded-full px-8 text-[15px] font-medium"
+					class="rounded-full px-8 text-[15px] font-medium border-muted"
 				>
 					Explore Live Demo <ChevronRight class="ml-1 h-4 w-4" />
 				</Button>
 			</div>
+
+			<div
+				class="mx-auto mt-16 w-full max-w-2xl rounded-xl border border-border/60 bg-zinc-50 p-4 text-left font-mono text-[13px] dark:bg-zinc-900/40"
+			>
+				<div class="flex items-center justify-between gap-4 overflow-x-auto whitespace-nowrap pl-1">
+					<code class="text-foreground">{dockerCommand}</code>
+					<button
+						onclick={copyToClipboard}
+						class="text-muted-foreground hover:text-foreground transition-colors p-1"
+						aria-label="Copy code"
+					>
+						{#if copied}
+							<Check class="h-4 w-4 text-emerald-500" />
+						{:else}
+							<Copy class="h-4 w-4" />
+						{/if}
+					</button>
+				</div>
+			</div>
 		</div>
 
-		<div
-			class="mx-auto mt-16 w-full max-w-2xl rounded-xl border border-border/60 bg-zinc-50 p-4 text-left font-mono text-[13px] dark:bg-zinc-900/40"
-		>
-			<div class="flex items-center justify-between border-b border-border/40 pb-2 mb-3">
-				<div class="flex gap-1.5">
-					<span class="h-3 w-3 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
-					<span class="h-3 w-3 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
-					<span class="h-3 w-3 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
-				</div>
-				<span class="text-[11px] text-muted-foreground font-sans">Quick Launch</span>
-			</div>
-			<div class="flex items-center justify-between gap-4 overflow-x-auto whitespace-nowrap pl-1">
-				<code class="text-foreground">{dockerCommand}</code>
-				<button
-					onclick={copyToClipboard}
-					class="text-muted-foreground hover:text-foreground transition-colors p-1"
-					aria-label="Copy code"
-				>
-					{#if copied}
-						<Check class="h-4 w-4 text-emerald-500" />
-					{:else}
-						<Copy class="h-4 w-4" />
-					{/if}
-				</button>
-			</div>
+		<div class="mt-20 overflow-hidden rounded-2xl border bg-card shadow-sm">
+			<img src="/dashboard.png" alt="Mimir Dashboard" class="w-full" />
 		</div>
 	</section>
 
-	<section class="mx-auto max-w-[1200px] px-6 py-20 sm:py-28">
-		<div class="border-t border-border/40 pt-16">
-			<h2 class="text-3xl font-bold tracking-tight sm:text-4xl mb-12">
-				Engineered for collection management.
-			</h2>
+	<section class="mx-auto max-w-6xl px-6 py-32">
+		<div class="grid gap-12 md:grid-cols-2">
+			<div>
+				<p class="text-sm text-muted-foreground uppercase tracking-wide">Metadata</p>
 
-			<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-				<div
-					class="md:col-span-2 rounded-2xl border border-border/50 bg-card p-8 flex flex-col justify-between min-h-[300px]"
-				>
-					<div class="max-w-md">
-						<HardDrive class="h-6 w-6 text-primary mb-4" />
-						<h3 class="text-xl font-semibold">Automatic Metadata Extraction</h3>
-						<p class="mt-2 text-[15px] leading-relaxed text-muted-foreground">
-							Automatically parses embedded audio tags, extracts chapter breakdowns, and fetches
-							rich descriptive assets from open sources including Audible and Open Library.
-						</p>
-					</div>
-				</div>
-
-				<div
-					class="rounded-2xl border border-border/50 bg-card p-8 flex flex-col justify-between min-h-[300px]"
-				>
-					<div>
-						<Users class="h-6 w-6 text-primary mb-4" />
-						<h3 class="text-xl font-semibold">Multi-User Control</h3>
-						<p class="mt-2 text-[15px] leading-relaxed text-muted-foreground">
-							Create unique profiles for family members with independent listener progress queues
-							and custom access permissions.
-						</p>
-					</div>
-				</div>
-
-				<div
-					class="rounded-2xl border border-border/50 bg-card p-8 flex flex-col justify-between min-h-[300px]"
-				>
-					<div>
-						<RefreshCw class="h-6 w-6 text-primary mb-4" />
-						<h3 class="text-xl font-semibold">Active Position Sync</h3>
-						<p class="mt-2 text-[15px] leading-relaxed text-muted-foreground">
-							Pause your playback on the desktop browser and immediately resume from the exact
-							sentence on your mobile client application.
-						</p>
-					</div>
-				</div>
-
-				<div
-					class="md:col-span-2 rounded-2xl border border-border/50 bg-card p-8 flex flex-col justify-between min-h-[300px]"
-				>
-					<div class="max-w-md">
-						<Radio class="h-6 w-6 text-primary mb-4" />
-						<h3 class="text-xl font-semibold">Integrated Podcast Client</h3>
-						<p class="mt-2 text-[15px] leading-relaxed text-muted-foreground">
-							Subscribe to RSS feeds, parse episode manifests automatically, downmix raw media
-							formats, and manage sequential playback tracking within a uniform dashboard interface.
-						</p>
-					</div>
-				</div>
+				<h2 class="mt-3 text-4xl font-semibold tracking-tight text-balance">
+					Automatic library organization.
+				</h2>
 			</div>
-		</div>
-	</section>
 
-	<section class="bg-zinc-50/60 dark:bg-zinc-900/20 py-20 sm:py-28">
-		<div class="mx-auto max-w-[1200px] px-6">
-			<div class="max-w-2xl mb-16">
-				<h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Carry your library anywhere.</h2>
-				<p class="mt-4 text-[16px] text-muted-foreground leading-relaxed">
-					Stream content smoothly via localized web apps, native desktop wrappers, or highly
-					tailored mobile frameworks maintaining internal localized sync mappings.
+			<div>
+				<p class="text-lg leading-relaxed text-muted-foreground">
+					Mimir automatically extracts chapters, authors, narrators, series information, and cover
+					artwork from your audiobook files, keeping even the largest collections organized with
+					minimal effort.
 				</p>
 			</div>
+		</div>
 
-			<div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
-				<div
-					class="rounded-xl border border-border/40 bg-background p-6 flex flex-col justify-between transition-all duration-300 hover:border-border"
-				>
-					<div class="flex items-start gap-4">
-						<Smartphone class="h-5 w-5 text-muted-foreground mt-0.5" />
-						<div>
-							<h4 class="font-medium text-[15px]">Apple iOS</h4>
-							<p class="mt-1 text-[13px] text-muted-foreground leading-normal">
-								Available via TestFlight distribution builds.
-							</p>
-						</div>
-					</div>
-					<a
-						href="/docs/apps"
-						class="mt-6 text-[13px] font-medium text-primary flex items-center hover:underline"
-					>
-						Join TestFlight <ChevronRight class="ml-0.5 h-3.5 w-3.5" />
-					</a>
-				</div>
+		<div class="mt-12 overflow-hidden rounded-2xl border bg-card">
+			<img src="/metadata.png" alt="Metadata Management" class="w-full" />
+		</div>
+	</section>
 
-				<div
-					class="rounded-xl border border-border/40 bg-background p-6 flex flex-col justify-between transition-all duration-300 hover:border-border"
-				>
-					<div class="flex items-start gap-4">
-						<Smartphone class="h-5 w-5 text-muted-foreground mt-0.5" />
-						<div>
-							<h4 class="font-medium text-[15px]">Google Android</h4>
-							<p class="mt-1 text-[13px] text-muted-foreground leading-normal">
-								Download directly via Google Play Store or raw APK packages.
-							</p>
-						</div>
-					</div>
-					<a
-						href="/docs/apps"
-						class="mt-6 text-[13px] font-medium text-primary flex items-center hover:underline"
-					>
-						Get on Google Play <ChevronRight class="ml-0.5 h-3.5 w-3.5" />
-					</a>
-				</div>
+	<section class="mx-auto max-w-6xl px-6 py-32 border-t">
+		<div class="grid gap-12 md:grid-cols-2">
+			<div>
+				<p class="text-sm text-muted-foreground uppercase tracking-wide">Sync</p>
 
-				<div
-					class="rounded-xl border border-border/40 bg-background p-6 flex flex-col justify-between transition-all duration-300 hover:border-border"
-				>
-					<div class="flex items-start gap-4">
-						<Monitor class="h-5 w-5 text-muted-foreground mt-0.5" />
-						<div>
-							<h4 class="font-medium text-[15px]">Desktop Clients</h4>
-							<p class="mt-1 text-[13px] text-muted-foreground leading-normal">
-								Cross-platform companion wrappers built for native execution.
-							</p>
-						</div>
-					</div>
-					<a
-						href="/docs/apps"
-						class="mt-6 text-[13px] font-medium text-primary flex items-center hover:underline"
-					>
-						Download Binaries <ChevronRight class="ml-0.5 h-3.5 w-3.5" />
-					</a>
-				</div>
+				<h2 class="mt-3 text-4xl font-semibold tracking-tight text-balance">
+					Pick up where you left off.
+				</h2>
 			</div>
+
+			<div>
+				<p class="text-lg leading-relaxed text-muted-foreground">
+					Your listening progress syncs instantly between devices. Start a chapter on desktop and
+					continue from the exact position on your phone.
+				</p>
+			</div>
+		</div>
+
+		<div class="mt-12 overflow-hidden rounded-2xl border bg-card">
+			<img src="/sync.png" alt="Sync" class="w-full" />
+		</div>
+	</section>
+
+	<section class="mx-auto max-w-6xl px-6 py-32 border-t">
+		<div class="max-w-2xl">
+			<p class="text-sm text-muted-foreground uppercase tracking-wide">Available Everywhere</p>
+
+			<h2 class="mt-3 text-4xl font-semibold tracking-tight">Listen on any device.</h2>
+		</div>
+
+		<div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+			<div
+				class="rounded-xl border border-border/40 bg-background p-6 flex flex-col justify-between transition-all duration-300 hover:border-border"
+			>
+				<div class="flex items-start gap-4">
+					<Smartphone class="h-5 w-5 text-muted-foreground mt-0.5" />
+					<div>
+						<h4 class="font-medium text-[15px]">Apple iOS</h4>
+						<p class="mt-1 text-[13px] text-muted-foreground leading-normal">
+							Available via TestFlight distribution builds.
+						</p>
+					</div>
+				</div>
+				<a
+					href="/docs/apps"
+					class="mt-6 text-[13px] font-medium text-primary flex items-center hover:underline"
+				>
+					Join TestFlight <ChevronRight class="ml-0.5 h-3.5 w-3.5" />
+				</a>
+			</div>
+
+			<div
+				class="rounded-xl border border-border/40 bg-background p-6 flex flex-col justify-between transition-all duration-300 hover:border-border"
+			>
+				<div class="flex items-start gap-4">
+					<Smartphone class="h-5 w-5 text-muted-foreground mt-0.5" />
+					<div>
+						<h4 class="font-medium text-[15px]">Google Android</h4>
+						<p class="mt-1 text-[13px] text-muted-foreground leading-normal">
+							Download directly via Google Play Store or raw APK packages.
+						</p>
+					</div>
+				</div>
+				<a
+					href="/docs/apps"
+					class="mt-6 text-[13px] font-medium text-primary flex items-center hover:underline"
+				>
+					Get on Google Play <ChevronRight class="ml-0.5 h-3.5 w-3.5" />
+				</a>
+			</div>
+
+			<div
+				class="rounded-xl border border-border/40 bg-background p-6 flex flex-col justify-between transition-all duration-300 hover:border-border"
+			>
+				<div class="flex items-start gap-4">
+					<Monitor class="h-5 w-5 text-muted-foreground mt-0.5" />
+					<div>
+						<h4 class="font-medium text-[15px]">Desktop Clients</h4>
+						<p class="mt-1 text-[13px] text-muted-foreground leading-normal">
+							Cross-platform companion wrappers built for native execution.
+						</p>
+					</div>
+				</div>
+				<a
+					href="/docs/apps"
+					class="mt-6 text-[13px] font-medium text-primary flex items-center hover:underline"
+				>
+					Download Binaries <ChevronRight class="ml-0.5 h-3.5 w-3.5" />
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="mx-auto max-w-4xl px-6 py-32 text-center">
+		<h2 class="text-4xl font-semibold tracking-tight sm:text-5xl">
+			Start building your audiobook library.
+		</h2>
+
+		<p class="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+			Free, self-hosted, and designed specifically for audiobook collectors.
+		</p>
+
+		<div class="mt-10">
+			<Button size="lg" class="rounded-full px-8">Get Started</Button>
 		</div>
 	</section>
 </div>
