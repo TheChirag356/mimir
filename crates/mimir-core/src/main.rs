@@ -1,5 +1,6 @@
 mod api;
 mod db;
+mod error;
 mod state;
 
 use axum::{routing::get, Router};
@@ -24,8 +25,16 @@ async fn main() {
 
     let app = Router::new()
         .route("/health", get(health_check))
-        .route("/api/libraries", get(api::libraries::get_libraries))
-        // attaches `state` so every handler using `State<AppState>` can access it
+        .route(
+            "/api/libraries",
+            get(api::libraries::list_libraries).post(api::libraries::create_library),
+        )
+        .route(
+            "/api/libraries/{id}",
+            get(api::libraries::get_library)
+                .patch(api::libraries::update_library)
+                .delete(api::libraries::delete_library),
+        )
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3333").await.unwrap();
