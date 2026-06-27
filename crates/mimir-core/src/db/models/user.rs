@@ -1,9 +1,11 @@
 use sqlx::FromRow;
 
 #[derive(FromRow, Debug, Clone)]
-pub struct EbookFile {
+pub struct User {
     pub id: String,
-    pub library_item_id: String,
-    pub file_path: String,
-    pub format: String,
+    pub username: String,
+    pub password_hash: String,
+    pub is_admin: bool,
+    pub created_at: i64,
+    pub updated_at: i64,
 }
