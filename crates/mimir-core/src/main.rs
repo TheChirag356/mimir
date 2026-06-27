@@ -1,6 +1,7 @@
 mod api;
 mod db;
 mod error;
+mod scanner;
 mod state;
 
 use axum::{routing::get, Router};
@@ -34,6 +35,14 @@ async fn main() {
             get(api::libraries::get_library)
                 .patch(api::libraries::update_library)
                 .delete(api::libraries::delete_library),
+        )
+        .route(
+            "/api/libraries/{id}/scan",
+            axum::routing::post(api::libraries::scan_library),
+        )
+        .route(
+            "/api/libraries/{id}/folders",
+            get(api::libraries::list_folders).post(api::libraries::create_folder),
         )
         .with_state(state);
 

@@ -20,3 +20,15 @@ pub struct UpdateLibraryRequest {
     pub name: Option<String>,
     pub media_type: Option<String>,
 }
+
+#[derive(Deserialize, Clone, Debug)]
+pub struct CreateFolderRequest {
+    pub path: String,
+}
+
+#[derive(Serialize, Clone, Debug)]
+pub struct LibraryFolderDto {
+    pub id: String,
+    pub library_id: String,
+    pub path: String,
+}
