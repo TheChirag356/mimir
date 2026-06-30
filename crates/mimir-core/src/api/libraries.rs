@@ -1,3 +1,4 @@
+use crate::auth::extractor::AuthUser;
 use crate::scanner;
 use crate::{db, error::AppError, state::AppState};
 use axum::{
@@ -41,6 +42,7 @@ fn validate_media_type(media_type: &str) -> Result<(), AppError> {
 
 pub async fn list_libraries(
     State(state): State<AppState>,
+    _user: AuthUser, // present but unused — just requires a valid token
 ) -> Result<Json<Vec<LibraryDto>>, AppError> {
     let libraries = db::libraries::list_libraries(&state.db).await?;
     Ok(Json(libraries.into_iter().map(Into::into).collect()))

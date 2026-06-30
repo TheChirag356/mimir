@@ -16,3 +16,5 @@ dotenv = "0.15.0"
 dotenvy = "0.15.7"
 lofty = "0.24.0"
 walkdir = "2.5.0"
+argon2 = { version = "0.5.3", features = ["std"] }
+jsonwebtoken = { version = "10", default-features = false, features = ["rust_crypto"] }

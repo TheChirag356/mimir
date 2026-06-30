@@ -1,4 +1,5 @@
 mod api;
+mod auth;
 mod db;
 mod error;
 mod scanner;
@@ -22,10 +23,18 @@ async fn main() {
         .await
         .expect("failed to connect to database");
 
-    let state = AppState { db: pool };
+    let state = AppState {
+        db: pool,
+        jwt_secret: std::env::var("JWT_SECRET").expect("JWT_SECRET must be set"),
+    };
 
     let app = Router::new()
         .route("/health", get(health_check))
+        .route(
+            "/api/setup",
+            axum::routing::post(api::auth::create_first_user),
+        )
+        .route("/api/login", axum::routing::post(api::auth::login))
         .route(
             "/api/libraries",
             get(api::libraries::list_libraries).post(api::libraries::create_library),
