@@ -32,7 +32,13 @@ pub struct DiscoveredItem {
 // rather than erroring if lofty can't read it — a single corrupt file
 // shouldn't abort the whole scan.
 fn probe_audio(path: &Path, track_index: i32) -> Option<DiscoveredAudioFile> {
-    let tagged_file = read_from_path(path).ok()?;
+    let tagged_file = match read_from_path(path) {
+        Ok(f) => f,
+        Err(e) => {
+            eprintln!("lofty failed to read {:?}: {e}", path);
+            return None;
+        }
+    };
     let properties = tagged_file.properties();
 
     Some(DiscoveredAudioFile {

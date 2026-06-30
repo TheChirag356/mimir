@@ -53,6 +53,10 @@ async fn main() {
             "/api/libraries/{id}/folders",
             get(api::libraries::list_folders).post(api::libraries::create_folder),
         )
+        .route(
+            "/api/items/{item_id}/audio/{audio_file_id}/stream",
+            get(api::stream::stream_audio),
+        )
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3333").await.unwrap();

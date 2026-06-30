@@ -18,3 +18,5 @@ lofty = "0.24.0"
 walkdir = "2.5.0"
 argon2 = { version = "0.5.3", features = ["std"] }
 jsonwebtoken = { version = "10", default-features = false, features = ["rust_crypto"] }
+tower = { version = "0.5.3", features = ["util"] }
+tower-http = { version = "0.7.0", features = ["fs"] }

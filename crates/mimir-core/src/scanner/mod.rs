@@ -14,11 +14,12 @@ pub struct ScanSummary {
 }
 
 pub async fn scan_library(pool: &SqlitePool, library_id: &str) -> Result<ScanSummary, sqlx::Error> {
-    let folders: Vec<LibraryFolder> =
-        sqlx::query_as("SELECT id, library_id, path FROM library_folders WHERE library_id = ?")
-            .bind(library_id)
-            .fetch_all(pool)
-            .await?;
+    let folders: Vec<LibraryFolder> = sqlx::query_as(
+        "SELECT id, library_id, path, created_at FROM library_folders WHERE library_id = ?",
+    )
+    .bind(library_id)
+    .fetch_all(pool)
+    .await?;
 
     let mut summary = ScanSummary {
         items_added: 0,
