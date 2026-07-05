@@ -5,7 +5,10 @@ mod error;
 mod scanner;
 mod state;
 
-use axum::{routing::get, Router};
+use axum::{
+    routing::{delete, get, patch, post},
+    Router,
+};
 use sqlx::sqlite::SqlitePoolOptions;
 use state::AppState;
 
@@ -34,7 +37,7 @@ async fn main() {
             "/api/setup",
             axum::routing::post(api::auth::create_first_user),
         )
-        .route("/api/login", axum::routing::post(api::auth::login))
+        .route("/api/login", post(api::auth::login))
         .route(
             "/api/libraries",
             get(api::libraries::list_libraries).post(api::libraries::create_library),
@@ -47,7 +50,7 @@ async fn main() {
         )
         .route(
             "/api/libraries/{id}/scan",
-            axum::routing::post(api::libraries::scan_library),
+            post(api::libraries::scan_library),
         )
         .route(
             "/api/libraries/{id}/folders",
@@ -57,17 +60,16 @@ async fn main() {
             "/api/items/{item_id}/audio/{audio_file_id}/stream",
             get(api::stream::stream_audio),
         )
-        .route(
-            "/api/items/{id}/play",
-            axum::routing::post(api::session::start_session),
-        )
-        .route(
-            "/api/session/{id}/sync",
-            axum::routing::patch(api::session::sync_session),
-        )
+        .route("/api/items/{id}/play", post(api::session::start_session))
+        .route("/api/session/{id}/sync", patch(api::session::sync_session))
         .route(
             "/api/items/{id}/progress",
             get(api::session::get_item_progress),
+        )
+        .route("/api/items/{id}/ebook", get(api::ebook::serve_ebook))
+        .route(
+            "/api/items/{id}/ebook/progress",
+            patch(api::session::sync_ebook_progress),
         )
         .with_state(state);
 

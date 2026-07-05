@@ -29,3 +29,15 @@ pub struct ProgressDto {
     pub is_finished: bool,
     pub last_update: i64,
 }
+
+#[derive(Deserialize, Clone, Debug)]
+pub struct SyncEbookProgressRequest {
+    // CFI = Canonical Fragment Identifier — the EPUB standard's way of
+    // expressing "I am at this exact word in this chapter." Using a
+    // string here rather than a float keeps it format-agnostic: your
+    // Tauri webview-based reader can use a real CFI, while a simpler
+    // client can just send a percentage string like "42.7" — the server
+    // stores and returns whatever it received, no parsing needed.
+    pub cfi: Option<String>,
+    pub progress_percent: f64,
+}
