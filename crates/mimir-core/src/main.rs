@@ -57,6 +57,18 @@ async fn main() {
             "/api/items/{item_id}/audio/{audio_file_id}/stream",
             get(api::stream::stream_audio),
         )
+        .route(
+            "/api/items/{id}/play",
+            axum::routing::post(api::session::start_session),
+        )
+        .route(
+            "/api/session/{id}/sync",
+            axum::routing::patch(api::session::sync_session),
+        )
+        .route(
+            "/api/items/{id}/progress",
+            get(api::session::get_item_progress),
+        )
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3333").await.unwrap();
