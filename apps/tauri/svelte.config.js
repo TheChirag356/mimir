@@ -11,6 +11,9 @@ const config = {
       fallback: "index.html",
     }),
   },
+  alias: {
+    "$lib": "src/lib"
+  }
 };
 
 export default config;

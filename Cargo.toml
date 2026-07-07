@@ -4,6 +4,7 @@ members = [
     "crates/mimir-core",
     "crates/mimir-client",
     "crates/mimir-common",
+    "apps/tauri/src-tauri"
 ]
 
 [workspace.package]
