@@ -157,3 +157,23 @@ pub async fn list_folders(
     let folders = db::library_folders::list_folders(&state.db, &library_id).await?;
     Ok(Json(folders.into_iter().map(Into::into).collect()))
 }
+
+pub async fn list_library_items(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+    _user: AuthUser,
+) -> Result<Json<serde_json::Value>, AppError> {
+    let items = crate::db::library_items::list_items_for_library(&state.db, &id).await?;
+    Ok(Json(serde_json::json!(items)))
+}
+
+pub async fn get_item(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+    _user: AuthUser,
+) -> Result<Json<serde_json::Value>, AppError> {
+    let item = crate::db::library_items::get_item_detail(&state.db, &id)
+        .await?
+        .ok_or_else(|| AppError::NotFound(format!("item {id} not found")))?;
+    Ok(Json(serde_json::json!(item)))
+}

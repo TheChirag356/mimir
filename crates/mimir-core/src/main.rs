@@ -6,11 +6,13 @@ mod scanner;
 mod state;
 
 use axum::{
+    http::Method,
     routing::{delete, get, patch, post},
     Router,
 };
 use sqlx::sqlite::SqlitePoolOptions;
 use state::AppState;
+use tower_http::cors::{Any, CorsLayer};
 
 #[tokio::main]
 async fn main() {
@@ -31,6 +33,17 @@ async fn main() {
         jwt_secret: std::env::var("JWT_SECRET").expect("JWT_SECRET must be set"),
     };
 
+    let cors = CorsLayer::new()
+        .allow_origin(Any)
+        .allow_methods([
+            Method::GET,
+            Method::POST,
+            Method::PATCH,
+            Method::DELETE,
+            Method::OPTIONS,
+        ])
+        .allow_headers(Any);
+
     let app = Router::new()
         .route("/health", get(health_check))
         .route(
@@ -42,6 +55,11 @@ async fn main() {
             "/api/libraries",
             get(api::libraries::list_libraries).post(api::libraries::create_library),
         )
+        .route(
+            "/api/libraries/{id}/items",
+            get(api::libraries::list_library_items),
+        )
+        .route("/api/items/{id}", get(api::libraries::get_item))
         .route(
             "/api/libraries/{id}",
             get(api::libraries::get_library)
@@ -71,6 +89,7 @@ async fn main() {
             "/api/items/{id}/ebook/progress",
             patch(api::session::sync_ebook_progress),
         )
+        .layer(cors)
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3333").await.unwrap();

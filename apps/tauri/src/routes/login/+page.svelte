@@ -1,39 +1,28 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { invoke } from "@tauri-apps/api/core";
-  import { auth, isLoggedIn } from "$lib/stores/auth";
+  import { auth } from "$lib/stores/auth";
   import { goto } from "$app/navigation";
 
-  interface Library {
-    id: string;
-    name: string;
-    media_type: string;
-  }
+  // Svelte 5 uses $state() instead of plain `let` for reactive variables
+  // that need two-way binding (bind:value). Plain `let` is no longer
+  // reactive in Svelte 5 components.
+  let serverUrl = $state("http://localhost:3333");
+  let username = $state("");
+  let password = $state("");
+  let error = $state("");
+  let loading = $state(false);
 
-  let libraries: Library[] = [];
-  let loading = true;
-  let error = "";
-
-  onMount(async () => {
-    if (!$isLoggedIn || !$auth.token) {
-      goto("/login");
-      return;
-    }
-
+  async function handleLogin() {
+    loading = true;
+    error = "";
     try {
-      const result = await invoke<Library[]>("get_libraries", {
-        serverUrl: $auth.serverUrl,
-        token: $auth.token,
-      });
-      // handle both array and {libraries: []} shapes from the server
-      libraries = Array.isArray(result) ? result : (result as any).libraries ?? [];
+      await auth.login(serverUrl, username, password);
+      goto("/");
     } catch (e) {
-      error = String(e);
-      console.error("get_libraries failed:", e);
+      error = "Invalid username or password";
     } finally {
       loading = false;
     }
-  });
+  }
 </script>
 
 <div class="min-h-screen bg-background flex items-center justify-center">
