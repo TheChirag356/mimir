@@ -1,0 +1,17 @@
+{
+	"name": "mimir-docs",
+	"compatibility_date": "2026-07-09",
+
+	"assets": {
+		"directory": "./build"
+	},
+
+	"workers_dev": false,
+
+	"routes": [
+		{
+			"pattern": "mimir.chiragarora.me/*",
+			"zone_name": "chiragarora.me"
+		}
+	]
+}

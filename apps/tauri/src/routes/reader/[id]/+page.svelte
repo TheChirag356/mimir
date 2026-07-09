@@ -6,6 +6,10 @@
   import { auth } from "$lib/stores/auth";
   import { player } from "$lib/stores/player";
   import ePub from "epubjs";
+  import {
+      registerReaderControls,
+      unregisterReaderControls,
+    } from "$lib/keyboard";
 
   const itemId = $page.params.id;
 
@@ -23,6 +27,32 @@
   let book: any = null;
   let rendition: any = null;
   let readerEl: HTMLElement;
+
+  // Add vertical scroll state
+  let isVertical = $state(false);
+
+  function toggleScrollMode() {
+    isVertical = !isVertical;
+    rendition?.flow(isVertical ? "scrolled-doc" : "paginated");
+  }
+
+  // Update onMount — after rendition.display(), add:
+  // Register controls so global keyboard handler can call them
+  registerReaderControls({
+    prevPage: () => rendition?.prev(),
+    nextPage: () => rendition?.next(),
+    setScrollMode: (vertical: boolean) => {
+      isVertical = vertical;
+      rendition?.flow(vertical ? "scrolled-doc" : "paginated");
+    },
+  });
+
+  // Update onDestroy:
+  onDestroy(() => {
+    unregisterReaderControls();
+    rendition?.destroy();
+    book?.destroy();
+  });
 
   async function syncProgress(cfi: string, percent: number) {
     try {
@@ -212,6 +242,28 @@
             <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
                   stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
           </svg>
+        </button>
+        <!-- scroll mode toggle -->
+        <button
+          onclick={toggleScrollMode}
+          title={isVertical ? "Switch to paginated" : "Switch to scroll"}
+          class="text-muted-foreground hover:text-foreground transition-colors
+                 w-7 h-7 flex items-center justify-center
+                 {isVertical ? 'text-primary' : ''}"
+        >
+          {#if isVertical}
+            <!-- vertical scroll icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          {:else}
+            <!-- paginated icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="8" height="18" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="13" y="3" width="8" height="18" rx="1" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          {/if}
         </button>
         <button
           onclick={() => showChapters = !showChapters}

@@ -4,6 +4,8 @@
   import { goto } from "$app/navigation";
   import "../app.css";
   import { player } from "$lib/stores/player";
+    import { attachGlobalKeyboard } from "$lib/keyboard";
+    import { onMount } from "svelte";
 
   // Icons as inline SVG components — no icon library dependency needed
   // for this small set, keeps the bundle lean.
@@ -17,6 +19,10 @@
     if (h > 0) return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
     return `${m}:${String(s).padStart(2, "0")}`;
   }
+
+  onMount(() => {
+    attachGlobalKeyboard();
+  });
 </script>
 
 {#if !$isLoggedIn}
