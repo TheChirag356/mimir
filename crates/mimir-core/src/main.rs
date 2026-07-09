@@ -45,12 +45,15 @@ async fn main() {
         .allow_headers(Any);
 
     let app = Router::new()
-        .route("/health", get(health_check))
+        .route("/status", get(api::status::status))
+        .route("/ping", get(api::status::ping))
+        .route("/healthcheck", get(api::status::healthcheck))
         .route(
             "/api/setup",
             axum::routing::post(api::auth::create_first_user),
         )
         .route("/api/login", post(api::auth::login))
+        .route("/api/authorize", axum::routing::post(api::auth::authorize))
         .route(
             "/api/libraries",
             get(api::libraries::list_libraries).post(api::libraries::create_library),
